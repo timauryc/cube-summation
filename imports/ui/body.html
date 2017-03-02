@@ -1,0 +1,27 @@
+<body>
+
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">Cube Summation</h1>
+    </div>
+    <div class="row">
+        {{> inout}}
+    </div>    
+</div>
+</body>
+
+
+<template name="inout">
+    <div class="six columns">
+        <h3>Ingresa el input:</h3>
+        <textarea name="input" id="input" cols="40" rows="30"></textarea><br>
+        <button class="button-primary">Correr</button>
+        <p style="color: red" name="error" id="error"></p>
+    </div>
+    <div class="six columns">
+        <h3>Output:</h3>
+        <p name="output" id="output">
+            {{answer}}
+        </p>
+    </div>
+</template>
