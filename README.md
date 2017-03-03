@@ -52,6 +52,7 @@ Las cambios que haria al codigo serian los siguientes:
 * comentaria la linea de  ($pushMessage = 'Tu servicio ha sido confirmado!';)
 * mejoraria los comentarios del codigo
 * colocaria logs en el codigo
+* crearia una clase para el manejo de exepciones y evitar el uso excesivo de if-else.
 
 
 1) Malas practicas de programacion evidenciadas en el codigo.
@@ -65,3 +66,66 @@ Las cambios que haria al codigo serian los siguientes:
 2) Mi refactorizacion busca hacer el codigo mas entendible, por tanto mas facil de mantener, delegar y refactorar.
 
 
+
+
+/**************************codigo*************************************/
+
+
+/**
+ * Crea una clase de excepciones custonizada.
+ */
+class myException extends Exception {
+
+    private $params;
+
+    public function __construct($params) {
+        $this->params = $params;
+    }
+
+    public function getError() {
+        return $this->params;
+    }
+
+}
+
+function post_confirm() {
+    $id = Input::get('service_id');
+    $servicio = Service::find($id);
+    try {
+        if ($servicio == NULL) {
+            throw new myException(array('error' => '3'));
+        }
+        if ($servicio->status_id == '6') {
+            throw new myException(array('error' => '2'));
+        }
+        if (!($servicio->driver_id == NULL && $servicio->status_id == '1')) {
+            throw new myException(array('error' => '1'));
+        }
+        $servicio = Service::update($id, array(
+                    'driver_id' => Input::get('driver_id'),
+                    'status_id' => '2'
+        ));
+        Driver::update(Input::get('driver_id'), array(
+            "available" => '0'
+        ));
+        $driverTmp = Driver::find(Input::get('driver_id'));
+        Service::update($id, array(
+            'car_id' => $driverTmp->car_id
+        ));
+        $pushMessage = 'Tu servicio ha sido confirmado!';
+        $servicio = Service::find($id);
+        $push = Push::make();
+        if ($servicio->user->uuid != '') {
+            if ($servicio->user->type == '1') {
+                $result = $push->ios($servicio->user->uuid, $pushMessage, 1, 'honk.wav', 'Open', array('serviceId' => $servicio->id));
+            } else {
+                $result = $push->android2($servicio->user->uuid, $pushMessage, 1, 'default', 'Open', array('serviceId' => $servicio->id));
+            }
+        }
+        return Response::json(array('error' => '0'));
+    } catch (myException $ex) {
+        return Response::json($ex->getError());
+    }
+}
+
+/********************************************************************/
