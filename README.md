@@ -37,6 +37,31 @@ PREGUNTAS(10pts):
 			Por ejemplo, en javascript muchos desenvolvedores gustan de hacer....
 			if(condition) statement....cuando el if implica un unico statement...
 			Si el codigo va a ser mantenido por otro desenvolvedor, este puede confundir con el codigo y se ve en la necesitad de escribir mas codigo si desea escribir mas statements por causa del if...
-			En ese caso considero mejor usar if(condition){statement} 
+			En ese caso considero mejor usar if(condition){statement}
+
+
+
+
+
+REFACTORACION DE CODIGO(20pts):
+
+Las cambios que haria al codigo serian los siguientes:
+
+* nombres de variables en ingles-español
+* cambiaria $id por $service_id
+* comentaria la linea de  ($pushMessage = 'Tu servicio ha sido confirmado!';)
+* mejoraria los comentarios del codigo
+* colocaria logs en el codigo
+
+
+1) Malas practicas de programacion evidenciadas en el codigo.
+
+*	Definicion de variables en dos idiomas distintos
+*	Considero que el nombre de algunas variables podria ser mas especifico.
+*	Comentarios pobres y poco explicitos
+* 	Falta de uso de logs en el codigo.
+
+
+2) Mi refactorizacion busca hacer el codigo mas entendible, por tanto mas facil de mantener, delegar y refactorar.
 
 
